@@ -40,10 +40,9 @@ class PropertyController {
 
     async updateProperty(req: Request, res: Response) {
         try {
-            const manager = req.userId;
             const { id: propertyId } = req.params;
             const updatedFields = req.body;
-            const updatedProperty = await propertyService.updateProperty({ manager: new Types.ObjectId(manager), propertyId: new Types.ObjectId(propertyId), updatedFields});
+            const updatedProperty = await propertyService.updateProperty(new Types.ObjectId(propertyId), updatedFields);
             return res.status(200).json({ data: updatedProperty });
         } catch (error: any) {
             return res.status(error.statusCode || 500).json({ error: error.message })
