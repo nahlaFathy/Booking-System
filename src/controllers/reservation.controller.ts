@@ -8,7 +8,7 @@ class ReservationController {
 
     async getReservations(req: Request, res: Response) {
         try {
-            const reservations = await reservationService.getReservation();
+            const reservations = await reservationService.getReservations();
             return res.status(200).json({ data: reservations })
         } catch (error: any) {
             return res.status(error.statusCode || 500).json({ error: error.message })
@@ -17,7 +17,7 @@ class ReservationController {
 
     async getReservation(req: Request, res: Response) {
         try {
-            const {id: reservationId } = req.params;
+            const { id: reservationId } = req.params;
             const userReservations = await reservationService.getReservationDetails(new Types.ObjectId(reservationId));
             return res.status(200).json({ data: userReservations })
         } catch (error: any) {
@@ -27,9 +27,9 @@ class ReservationController {
 
     async createReservations(req: Request, res: Response) {
         try {
-            const userId  = req.userId;
+            const userId = req.userId;
             const { propertyId, startDate, endDate } = req.body;
-            const reservation = await reservationService.createReservation({ guestId: new Types.ObjectId(userId), propertyId:  new Types.ObjectId(propertyId), startDate, endDate });
+            const reservation = await reservationService.createReservation({ guestId: new Types.ObjectId(userId), propertyId: new Types.ObjectId(propertyId), startDate, endDate });
             return res.status(201).json({ data: reservation })
         } catch (error: any) {
             return res.status(error.statusCode || 500).json({ error: error.message })
@@ -38,8 +38,8 @@ class ReservationController {
 
     async updateReservation(req: Request, res: Response) {
         try {
-            const userId  = req.userId;
-            const {id: reservationId } = req.params;
+            const userId = req.userId;
+            const { id: reservationId } = req.params;
             const updatedFields = req.body;
             const updatedReservation = await reservationService.updateReservation(new Types.ObjectId(userId), new Types.ObjectId(reservationId), updatedFields);
             return res.status(200).json({ data: updatedReservation });

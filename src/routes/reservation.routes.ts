@@ -13,9 +13,9 @@ class ReservationRouter {
 
 	private _routes() {
 		this._router.get('/', authenticateUser, ReservationController.getReservations);
-        this._router.get('/:id', authenticateUser, ReservationController.getReservation);
-        this._router.post('/', authenticateUser, ReservationController.createReservations);
-        this._router.patch('/:id', authenticateUser, ReservationController.updateReservation);
+		this._router.get('/:id', authenticateUser, ReservationController.getReservation);
+		this._router.post('/', authenticateUser, ReservationController.createReservations);
+		this._router.patch('/:id', authenticateUser, ReservationController.updateReservation);
 	}
 
 }

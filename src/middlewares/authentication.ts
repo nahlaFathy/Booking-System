@@ -19,7 +19,7 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
         const decoded = jwt.verify(_jwt, process.env.JWT_SECRET_KEY || 'secret-key') as unknown as { userId: string };
 
         const user = await User.findById(decoded.userId);
-        if(!user) {
+        if (!user) {
             return next(new Error("Unauthorized"));
         }
         // Set the decoded user ID to the request object

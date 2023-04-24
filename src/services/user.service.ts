@@ -5,7 +5,7 @@ import User, { IUser } from '../models/user';
 class UserService {
 
     // Update an existing User for a specific User
-    async updateUser(userId: Types.ObjectId,  updatedFields: IUser) {
+    async updateUser(userId: Types.ObjectId, updatedFields: IUser): Promise<IUser> {
         try {
             // Find the User by ID
             const user = await User.findById(userId);
@@ -25,24 +25,8 @@ class UserService {
         }
     };
 
-    // Delete an existing User for a specific User
-    async deleteUser(userId: Types.ObjectId) {
-        try {
-
-            // Find the User by ID and delete it
-            const deletedUser = await User.findByIdAndDelete(userId);
-            if (!deletedUser) {
-                throw new Error('User not found');
-            }
-
-            return true;
-        } catch (err: any) {
-            throw new Error(err);
-        }
-    };
-
     // Get specific user information for a specific User
-    async getUserByUserId(userId: Types.ObjectId) {
+    async getUserByUserId(userId: Types.ObjectId): Promise<IUser> {
         try {
             // Find the User by ID
             const user = await User.findById(userId);

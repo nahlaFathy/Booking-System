@@ -9,8 +9,8 @@ enum ReservationStatus {
 }
 
 export interface IReservation extends Document {
-  guestId: Types.ObjectId;
-  propertyId: Types.ObjectId;
+  guest: Types.ObjectId;
+  property: Types.ObjectId;
   status?: ReservationStatus;
   startDate: Date;
   endDate: Date;
@@ -18,9 +18,14 @@ export interface IReservation extends Document {
 
 const ReservationSchema = new Schema(
   {
-    guestId: { type: Types.ObjectId, ref: "User", required: true },
-    propertyId: { type: Types.ObjectId, ref: "Property", required: true },
-    status: { type: ReservationStatus, required: true, default: ReservationStatus.Booked },
+    guest: { type: Types.ObjectId, ref: "User", required: true },
+    property: { type: Types.ObjectId, ref: "Property", required: true },
+    status: {
+      type: String,
+      enum: Object.values(ReservationStatus),
+      required: true,
+      default: ReservationStatus.Booked
+    },
     startDate: { type: Date, required: true },
     endDate: { type: Date, required: true },
   },

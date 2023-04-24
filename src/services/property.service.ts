@@ -7,7 +7,7 @@ class PropertyService {
     // list all properties 
     async getProperties(): Promise<(IProperty)[]> {
         try {
-            const propertys = await Property.find().where({ deleteAt: null });
+            const propertys = await Property.find();
             if (!propertys) {
                 throw new Error('User does not exist');
             }
@@ -33,10 +33,10 @@ class PropertyService {
     }
 
     // Crreate new property
-    async createProperty({ name }: { name: string}) {
+    async addProperty({ name }: { name: string }): Promise<(IProperty)> {
 
         const newProperty = new Property({
-           name
+            name
         });
 
         // Save the property to the database
@@ -45,7 +45,7 @@ class PropertyService {
     }
 
     // Update an existing property
-    async updateProperty( propertyId: Types.ObjectId, updatedFields: IProperty) {
+    async updateProperty(propertyId: Types.ObjectId, updatedFields: IProperty): Promise<(IProperty)> {
         try {
             // Find the Property by user id and property id
             const property = await Property.findById(propertyId);
@@ -66,7 +66,7 @@ class PropertyService {
     }
 
     // soft delete property as it has reference in reservation and can't be hard deleted 
-    async deleteProperty(propertyId: Types.ObjectId) {
+    async deleteProperty(propertyId: Types.ObjectId): Promise<boolean> {
         try {
             // Find the Property by user id and property id
             const property = await Property.findById(propertyId);
@@ -75,7 +75,7 @@ class PropertyService {
             }
 
             // Update the Property fields
-            const softDeleteProperty = await Property.findByIdAndUpdate(propertyId, { deletedAt:  Date.now }, { new: true });
+            const softDeleteProperty = await Property.findByIdAndUpdate(propertyId, { deletedAt: Date.now() }, { new: true });
             if (!softDeleteProperty) {
                 throw new Error('Error while deleting property');
             }

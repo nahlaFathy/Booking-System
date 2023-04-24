@@ -1,8 +1,8 @@
-import express, {Application} from "express";
+import express, { Application } from "express";
 import load from "./loaders/index";
 import dotenv from 'dotenv';
 dotenv.config({
-	path: '.env'
+    path: '.env'
 });
 const url: string = process.env.DATABASE_CONNECTION!
 

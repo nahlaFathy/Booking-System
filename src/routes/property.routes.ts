@@ -14,10 +14,13 @@ class PropertyRouter {
 
 	private _routes() {
 		this._router.get('/', authenticateUser, PropertyController.getProperties);
-        this._router.get('/:id', authenticateUser, PropertyController.getProperty);
-        this._router.post('/', authenticateUser, PropertyController.createProperty);
-        this._router.patch('/:id', authenticateUser, PropertyController.updateProperty);
-        this._router.delete('/:id', authenticateUser, PropertyController.deleteProperty);
+		this._router.get('/:id/reservations', authenticateUser, PropertyController.getPropertyReservations);
+		this._router.get('/:id', authenticateUser, PropertyController.getProperty);
+		this._router.post('/', authenticateUser, PropertyController.addProperty);
+		this._router.patch('/:id', authenticateUser, PropertyController.updateProperty);
+		this._router.delete('/:id', authenticateUser, PropertyController.deleteProperty);
+		this._router.get('/:id/guests', authenticateUser, PropertyController.getPropertyGuests);
+
 	}
 
 }

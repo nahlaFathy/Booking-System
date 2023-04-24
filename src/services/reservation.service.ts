@@ -8,7 +8,7 @@ class ReservationService {
     // Get reservations for a specific user
     async getReservationsByUserId(userId: Types.ObjectId): Promise<(IReservation)[]> {
         try {
-            const reservations = await Reservation.find({ guestId: userId });
+            const reservations = await Reservation.find({ guest: userId });
             if (!reservations) {
                 throw new Error('User does not exist');
             }
@@ -31,12 +31,25 @@ class ReservationService {
     // Get specific reservation details for a specific user
     async getReservationDetailsByUserId(userId: Types.ObjectId, reservationId: Types.ObjectId): Promise<(IReservation)> {
         try {
-            const reservation = await Reservation.findOne({ guestId: userId, _id: reservationId });
+            const reservation = await Reservation.findOne({ guest: userId, _id: reservationId });
             if (!reservation) {
                 throw new Error('Reservation does not exist');
             }
 
             return reservation;
+        } catch (err: any) {
+            throw new Error(err);
+        }
+    }
+
+    async getReservationByPropertyId(propertyId: Types.ObjectId): Promise<(IReservation)[]> {
+        try {
+            const reservations = await Reservation.find({ property: propertyId });
+            if (!reservations) {
+                throw new Error('Property does not exist');
+            }
+
+            return reservations;
         } catch (err: any) {
             throw new Error(err);
         }
@@ -56,14 +69,14 @@ class ReservationService {
         }
     }
 
-    async createReservation({ guestId, propertyId, startDate, endDate }: { guestId: Types.ObjectId, propertyId: Types.ObjectId, startDate: Date, endDate: Date }) {
+    async createReservation({ guestId, propertyId, startDate, endDate }: { guestId: Types.ObjectId, propertyId: Types.ObjectId, startDate: Date, endDate: Date }): Promise<IReservation> {
         const property = await Property.findById(propertyId);
-        if (property) {
-            throw new Error('property does not exist');
+        if (!property) {
+            throw new Error('Property does not exist');
         }
         const newReservation = new Reservation({
-            guestId,
-            propertyId,
+            guest: guestId,
+            property: propertyId,
             startDate,
             endDate
         })
@@ -73,10 +86,10 @@ class ReservationService {
     }
 
     // Update an existing reservation for a specific user
-    async updateReservation(userId: Types.ObjectId, reservationId: Types.ObjectId, updatedFields: IReservation) {
+    async updateReservation(userId: Types.ObjectId, reservationId: Types.ObjectId, updatedFields: IReservation): Promise<IReservation> {
         try {
             // Find the Reservation by user id and reservation id
-            const reservation = await Reservation.findOne({ guestId: userId, _id: reservationId });
+            const reservation = await Reservation.findOne({ guest: userId, _id: reservationId });
             if (!reservation) {
                 throw new Error('Reservation does not exist');
             }
@@ -91,7 +104,19 @@ class ReservationService {
         } catch (err: any) {
             throw new Error(err);
         }
-    };
+    }
+
+    // Get property guests
+    async getPropertyGuests(propertyId: Types.ObjectId) {
+        const property = await Property.findById(propertyId);
+        if (!property) {
+            throw new Error('Property does not exist');
+        }
+
+        const reservations = await Reservation.find({ property: propertyId }).populate("guest");
+        const guests = reservations.map((reservation) => { reservation.guest });
+        return guests;
+    }
 
 }
 
