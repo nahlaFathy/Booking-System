@@ -21,7 +21,7 @@ class PropertyService {
     // Get specific property details
     async getPropertyDetails(propertyId: Types.ObjectId): Promise<(IProperty)> {
         try {
-            const property = await Property.findById(propertyId);
+            const property = await Property.findById(propertyId).populate('manager');
             if (!property) {
                 throw new Error('Property does not exist');
             }
@@ -33,10 +33,11 @@ class PropertyService {
     }
 
     // Crreate new property
-    async addProperty({ name }: { name: string }): Promise<(IProperty)> {
+    async addProperty({ name, manager }: { name: string, manager: Types.ObjectId }): Promise<(IProperty)> {
 
         const newProperty = new Property({
-            name
+            name,
+            manager
         });
 
         // Save the property to the database
